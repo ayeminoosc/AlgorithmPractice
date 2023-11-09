@@ -4,7 +4,7 @@ package com.ayeminoo.algorithmpractice.leetcode.medium;
 import com.ayeminoo.algorithmpractice.util.BTreePrinter;
 import com.ayeminoo.algorithmpractice.util.Node;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 //java version - 17.0.7+7-Ubuntu-0ubuntu120.04
 public class P1104 {
 
-    public List<Integer> pathInZigZagTree(int max) {
+    public List<Integer> pathInZigZagTree2(int max) {
         Node<Integer> root = new Node<>(1);
         LinkedList<Node> children = new LinkedList<>();
         children.add(root);
@@ -30,17 +30,17 @@ public class P1104 {
                 Node temp1 = createNode(++current[0], max, node);
                 Node temp2 = createNode(++current[0], max, node);
                 if (temp1 != null) {
-                    if(even){
+                    if (even) {
                         tempChildren.addFirst(temp1);
-                    }else{
+                    } else {
                         tempChildren.add(temp1);
                     }
                     lastNode = temp1;
                 }
                 if (temp2 != null) {
-                    if(even){
+                    if (even) {
                         tempChildren.addFirst(temp2);
-                    }else{
+                    } else {
                         tempChildren.add(temp2);
                     }
                     lastNode = temp2;
@@ -94,7 +94,62 @@ public class P1104 {
 //    }
 
     public static void main(String[] args) {
-        System.out.println(new P1104().pathInZigZagTree(26));
+        System.out.println(new P1104().pathInZigZagTree(16));
+//        System.out.println(new P1104().findParentPosition(19, 5));
+//        System.out.println(new P1104().findParentPosition(12, 4));
+    }
+
+    public List<Integer> pathInZigZagTree(int max) {
+        if(max == 1) return Arrays.asList(1);
+        int row = findRow(max);
+        LinkedList<Integer> result = new LinkedList<>();
+        result.addFirst(max);
+
+        do {
+            boolean even = row % 2 == 0;
+            int parentPosition = even ? findRLParentPosition(max, row) : findLRParentPosition(max, row);
+            --row;
+            max = !even ? findRLData(parentPosition, row) : findLRData(parentPosition, row);
+            if (max > 0)
+                result.addFirst(max);
+        } while (row > 0);
+
+        return result;
+    }
+
+    int findRow(int max) {
+        return (int) Math.floor((Math.log(max) / Math.log(2)+1));
+    }
+
+    int findParentPosition(int data, int row) {
+        return row % 2 == 0 ? findRLParentPosition(data, row) : findLRParentPosition(data, row);
+    }
+
+    int findData(int position, int row) {
+        return row % 2 == 0 ? findRLData(position, row) : findLRData(position, row);
+    }
+
+    int findLRParentPosition(int data, int row) {
+        int previousRow = (int) Math.pow(2, row - 1) - 1;
+        double diff = (double) data - previousRow;
+        int position = (int) Math.ceil(diff / 2);
+        return position;
+    }
+
+    int findRLParentPosition(int data, int row) {
+        double previousRow = Math.pow(2, row - 1) - 1;
+        double maxPosition = (Math.pow(2, row) - 1 - previousRow) / 2;
+        return (int) (maxPosition - Math.ceil((data - previousRow) / 2)) + 1;
+    }
+
+    int findLRData(int position, int row) {
+        int previousRow = (int) Math.pow(2, row - 1) - 1;
+        return previousRow + position;
+    }
+
+    int findRLData(int position, int row) {
+        int currentRow = (int) Math.pow(2, row);
+        return currentRow - position;
     }
 
 
