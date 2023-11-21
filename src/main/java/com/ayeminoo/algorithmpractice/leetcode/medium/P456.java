@@ -24,8 +24,8 @@ public class P456 {
 //    }
 
     public static void main(String[]args){
-        System.out.println(new P456().find132pattern(new int[]{1,0,1,-4,-3})); // false
-        System.out.println(new P456().find132pattern(new int[]{3,5,  0 ,3,4})); // true
+//        System.out.println(new P456().find132pattern(new int[]{1,0,1,-4,-3})); // false
+//        System.out.println(new P456().find132pattern(new int[]{3,5,  0 ,3,4})); // true
 
     }
 }
